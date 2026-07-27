@@ -1,0 +1,90 @@
+# Aim: 4a.Write a Python code to create a NumPy Array
+
+import numpy as np
+
+# Create a NumPy array
+arr = np.array([10, 20, 30, 40, 50])
+
+# Display the array
+print("NumPy Array:", arr)
+
+# Aim: 4b.Demonstrate basic operations on a single NumPy array
+
+import numpy as np
+
+# Create a NumPy array
+arr = np.array([10, 20, 30, 40, 50])
+
+print("Original Array:", arr)
+
+# Addition
+print("Array + 5:", arr + 5)
+
+# Subtraction
+print("Array - 5:", arr - 5)
+
+# Multiplication
+print("Array * 2:", arr * 2)
+
+# Division
+print("Array / 2:", arr / 2)
+
+# Square of elements
+print("Square of Array:", arr ** 2)
+
+# Sum of all elements
+print("Sum:", np.sum(arr))
+
+# Maximum element
+print("Maximum:", np.max(arr))
+
+
+# Aim: 4c.Create an array with 10 elements and slice elements from 1st to 5th
+
+import numpy as np
+
+# Create a NumPy array with 10 elements
+arr = np.array([10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
+
+print("Original Array:", arr)
+
+# Slice elements from 1st to 5th (index 0 to 4)
+sliced_arr = arr[0:5]
+
+print("Sliced Array (1st to 5th elements):", sliced_arr)
+
+# Aim: 4d.Sort an array alphabetically
+
+import numpy as np
+
+# Create a NumPy array of strings
+arr = np.array(["Mango", "Apple", "Orange", "Banana", "Grapes"])
+
+print("Original Array:", arr)
+
+# Sort the array alphabetically
+sorted_arr = np.sort(arr)
+
+print("Sorted Array:", sorted_arr)
+
+
+# Aim: 4e.Create a filter array that returns the maximum value
+
+import numpy as np
+
+# Create a NumPy array
+arr = np.array([15, 45, 10, 80, 25, 80, 60])
+
+print("Original Array:", arr)
+
+# Find the maximum value
+max_value = np.max(arr)
+
+# Create a filter array
+filter_arr = (arr == max_value)
+
+# Return the maximum value(s)
+result = arr[filter_arr]
+
+print("Maximum Value:", result)
+
