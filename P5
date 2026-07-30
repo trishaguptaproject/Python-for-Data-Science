@@ -1,0 +1,95 @@
+#Aim: 5a. Write a python code to demonstrate importing pandas libraries and create data frame object. 
+# Practical No. 5 (5a)
+# Name : Trisha Gupta
+# Roll No : S086
+
+import pandas as pd
+
+print("=" * 40)
+print("PRACTICAL NO. 5 (5a)")
+print("=" * 40)
+print("Name     : Trisha Gupta")
+print("Roll No. : S086")
+print()
+
+# Read Excel file
+df = pd.read_excel("StressLevelDataset.xlsx")
+
+print("DataFrame Created Successfully\n")
+
+print("First 5 Records of Dataset:")
+print(df.head())
+
+#5b. Write a python code to show statistical information on given data set. 
+# Practical No. 5 (5b)
+# Name : Trisha Gupta
+# Roll No : S086
+
+import pandas as pd
+
+print("=" * 40)
+print("PRACTICAL NO. 5 (5b)")
+print("=" * 40)
+print("Name     : Trisha Gupta")
+print("Roll No. : S086")
+print()
+
+# Read Excel file
+df = pd.read_excel("StressLevelDataset.xlsx")
+
+print("Statistical Information of Dataset")
+print()
+
+print(df.describe())
+
+#5c. Write a python code to create pandas series from dictionaries. 
+# Practical No. 5 (5c)
+# Name : Trisha Gupta
+# Roll No : S086
+
+import pandas as pd
+
+print("=" * 40)
+print("PRACTICAL NO. 5 (5c)")
+print("=" * 40)
+print("Name     : Trisha Gupta")
+print("Roll No. : S086")
+print()
+
+# Create Dictionary
+student = {
+    "Name": "Trisha Gupta",
+    "Roll No": "S086",
+    "Course": "Python for DS",
+    "Semester": "SYBCom",
+    "City": "Mumbai"
+}
+
+# Create Pandas Series
+series = pd.Series(student)
+
+print("Pandas Series Created from Dictionary:\n")
+print(series)
+
+## Practical No. 5 (5d)
+# Name : Trisha Gupta
+# Roll No : S086
+
+import pandas as pd
+
+print("=" * 40)
+print("PRACTICAL NO. 5 (5d)")
+print("=" * 40)
+print("Name     : Trisha Gupta")
+print("Roll No. : S086")
+print()
+
+# Create a Pandas Series
+marks = pd.Series([45, 68, 72, 55, 89, 91, 60])
+
+print("Original Series:")
+print(marks)
+
+print("\nMarks greater than or equal to 70:")
+filtered = marks[marks >= 70]
+print(filtered)
