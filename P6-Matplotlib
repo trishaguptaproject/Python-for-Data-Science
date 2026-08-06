@@ -1,0 +1,302 @@
+#Code:1
+# Line Plot
+# Import the matplotlib library
+import matplotlib.pyplot as plt
+
+# Data
+x = [1, 2, 3, 4, 5]
+y = [2, 4, 6, 8, 10]
+
+# Create a line plot
+plt.plot(x, y)
+
+# Add title
+plt.title("Simple Line Plot")
+
+# Label the axes
+plt.xlabel("Numbers")
+plt.ylabel("Doubles")
+
+# Display the graph
+plt.show()
+#Code:2
+#Customized Line Plot
+# Import matplotlib library
+import matplotlib.pyplot as plt
+
+# Data
+x = [1, 2, 3, 4, 5]
+y = [2, 4, 6, 8, 10]
+
+# Create a customized line plot
+plt.plot(x, y, color="red", linestyle="--", marker="o")
+
+# Add title
+plt.title("Customized Line Plot")
+
+# Label the axes
+plt.xlabel("Numbers")
+plt.ylabel("Doubles")
+
+# Display the graph
+plt.show()
+
+#Code:3
+#Bar Chart
+# Import matplotlib library
+import matplotlib.pyplot as plt
+
+# Data
+categories = ["Data Structures", "Scala for DS", "Operating System", "Python for DS"]
+scores = [65, 70, 74, 60]
+
+# Create bar chart
+plt.bar(categories, scores)
+
+# Add title
+plt.title("Student Scores")
+
+# Label the axes
+plt.xlabel("Subjects")
+plt.ylabel("Scores")
+
+# Display the graph
+plt.show()
+
+#code:4
+#4. Horizontal Bar Chart
+# Import matplotlib library
+import matplotlib.pyplot as plt
+
+# Data
+categories = ["Data Structures", "Scala for DS", "Operating System", "Python for DS"]
+scores = [65, 70, 74, 60]
+
+# Create horizontal bar chart
+plt.barh(categories, scores)
+
+# Add title
+plt.title("Student Scores")
+
+# Label the axes
+plt.xlabel("Scores")
+plt.ylabel("Subjects")
+
+# Display the graph
+plt.show()
+
+#code:5
+#5. Pie Chart
+# Import matplotlib library
+import matplotlib.pyplot as plt
+
+# Data
+categories = ["Data Structures", "Scala for DS", "Operating System", "Python for DS"]
+scores = [65, 70, 74, 60]
+
+# Explode the "Python for DS" slice
+explode = [0, 0, 0, 0.1]
+
+# Create pie chart
+plt.pie(scores,
+        labels=categories,
+        autopct="%1.1f%%",
+        explode=explode)
+
+# Add title
+plt.title("Student Scores")
+
+# Display the chart
+plt.show()
+
+#Code:6
+#6. Scatter Plot
+# Import matplotlib library
+import matplotlib.pyplot as plt
+
+# Data
+x = [5, 7, 8, 7, 6, 9, 5]
+y = [99, 86, 87, 88, 100, 86, 103]
+
+# Create scatter plot
+plt.scatter(x, y, color="green", s=100)
+
+# Add title
+plt.title("Scatter Plot")
+
+# Label the axes
+plt.xlabel("X Values")
+plt.ylabel("Y Values")
+
+# Display the graph
+plt.show()
+
+#Code:7
+#7. Histogram
+# Import required libraries
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate 100 random numbers from a normal distribution
+data = np.random.normal(size=100)
+
+# Create histogram
+plt.hist(data, bins=20)
+
+# Add title
+plt.title("Histogram")
+
+# Label the axes
+plt.xlabel("Values")
+plt.ylabel("Frequency")
+
+# Add grid
+plt.grid(True)
+
+# Display the graph
+plt.show()
+
+
+#Code:8
+#8. Two Plots in One Figure
+# Import matplotlib library
+import matplotlib.pyplot as plt
+
+# Data
+x = [1, 2, 3, 4, 5]
+y = [2, 4, 6, 8, 10]
+
+categories = ["A", "B", "C", "D", "E"]
+values = [5, 7, 3, 8, 6]
+
+# Create a figure with 2 subplots (1 row, 2 columns)
+
+plt.subplot(1, 2, 1)
+plt.plot(x, y)
+plt.title("Line Plot")
+plt.xlabel("X")
+plt.ylabel("Y")
+
+plt.subplot(1, 2, 2)
+plt.bar(categories, values)
+plt.title("Bar Chart")
+plt.xlabel("Category")
+plt.ylabel("Value")
+
+# Adjust spacing
+plt.tight_layout()
+
+# Display the figure
+plt.show()
+
+#Code:9
+#9. 4 Subplots (2x2 Grid)
+# Import required libraries
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data for Line Plot
+x = [1, 2, 3, 4, 5]
+y = [2, 4, 6, 8, 10]
+
+# Data for Bar Chart
+categories = ["A", "B", "C", "D"]
+values = [5, 7, 3, 8]
+
+# Data for Scatter Plot
+x_scatter = [5, 7, 8, 7, 6, 9, 5]
+y_scatter = [99, 86, 87, 88, 100, 86, 103]
+
+# Data for Histogram
+data = np.random.normal(size=100)
+
+
+# Top-Left: Line Plot
+
+plt.subplot(2, 2, 1)
+plt.plot(x, y)
+plt.title("Line Plot")
+
+
+# Top-Right: Bar Chart
+
+plt.subplot(2, 2, 2)
+plt.bar(categories, values)
+plt.title("Bar Chart")
+
+
+# Bottom-Left: Scatter Plot
+
+plt.subplot(2, 2, 3)
+plt.scatter(x_scatter, y_scatter, color="green")
+plt.title("Scatter Plot")
+
+
+# Bottom-Right: Histogram
+
+plt.subplot(2, 2, 4)
+plt.hist(data, bins=20)
+plt.title("Histogram")
+
+# Adjust spacing
+plt.tight_layout()
+
+# Display all plots
+plt.show()
+
+#Code:10
+#10. Write a Python program using Matplotlib to visualize sales data:
+# You are given the data:
+#months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
+#sales_2023 = [150, 200, 250, 300, 280, 350]
+#sales_2024 = [180, 220, 270, 320, 300, 400]
+#Tasks:
+#1. Plot two line charts on the same graph:
+#2. Add:
+#3. Highlight the highest sales month of 2024 by adding an annotation on the graph.
+#4. Save the plot as "sales_comparison.png".
+# Import matplotlib library
+import matplotlib.pyplot as plt
+
+# Data
+months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
+sales_2023 = [150, 200, 250, 300, 280, 350]
+sales_2024 = [180, 220, 270, 320, 300, 400]
+
+# Plot sales for 2023
+plt.plot(months, sales_2023,
+         color="blue",
+         linestyle="--",
+         marker="o",
+         label="2023")
+
+# Plot sales for 2024
+plt.plot(months, sales_2024,
+         color="green",
+         linestyle="-",
+         marker="s",
+         label="2024")
+
+# Add title and labels
+plt.title("Monthly Sales Comparison (2023 vs 2024)")
+plt.xlabel("Months")
+plt.ylabel("Sales")
+
+# Add legend
+plt.legend()
+
+# Find highest sales in 2024
+max_sales = max(sales_2024)
+max_index = sales_2024.index(max_sales)
+
+# Add annotation
+plt.annotate("Highest Sales",
+             xy=(months[max_index], max_sales),
+             xytext=(months[max_index], max_sales + 30),
+             arrowprops=dict(facecolor="black", arrowstyle="->"))
+
+# Save the figure
+plt.savefig("sales_comparison.png")
+
+# Display the graph
+plt.show()
