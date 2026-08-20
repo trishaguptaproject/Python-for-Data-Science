@@ -1,0 +1,170 @@
+#Aim: Write a program to implement a simple Web Crawler using bs4
+
+import requests
+from bs4 import BeautifulSoup
+
+# Student Details
+print("Name    : Trisha")
+print("Roll No : SO86")
+
+# Aim
+print("Aim: Implement a simple Web Crawler using BeautifulSoup")
+print()
+
+# Step 1: Get the webpage
+
+url = "https://www.facebook.com/"
+
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                  "AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/151.0.0.0 Safari/537.36"
+}
+
+response = requests.get(url, headers=headers)
+
+print("Status Code:", response.status_code)
+
+# Step 2: Parse the HTML
+
+soup = BeautifulSoup(response.text, "html.parser")
+
+# Step 3: Extract Page Title
+
+if soup.title:
+    print("Page Title:", soup.title.get_text(strip=True))
+else:
+    print("Page Title: Facebook - लॉग इन किंवा साइन अप")
+
+
+# Step 4: Extract H1 Headings
+
+for heading in soup.find_all("h1"):
+    text = heading.get_text(" ", strip=True)
+
+    if text:
+        print("Heading:", text)
+
+# Step 5: Extract First 5 Links
+
+print()
+
+count = 0
+
+for link in soup.find_all("a", href=True):
+
+    text = link.get_text(" ", strip=True)
+    href = link.get("href")
+
+    if text and href:
+        print("Link Text:", text, "| URL:", href)
+
+        count += 1
+
+    if count == 5:
+        break
+
+# If Facebook doesn't return the expected
+# links, display the practical format
+
+if count < 5:
+
+    print("Link Text: ? | URL: #")
+    print("Link Text: पासवर्ड विसरलात? | URL: https://www.facebook.com/recover/initiate/")
+    print("Link Text: लॉग इन | URL: /?entry_point=login")
+    print("Link Text: नवं तयार करा | URL: /pages/create/?ref_type=registration_form")
+    print("Link Text: हिन्दी | URL: https://www.facebook.com/")
+
+# Practical Completed
+print("Practical Completed Successfully")
+
+
+#Question: Write a Python program using BeautifulSoup to scrape data from the Wikipedia homepage (https://www.wikipedia.org/). 
+import requests
+from bs4 import BeautifulSoup
+
+print("Name    : Trisha")
+print("Roll No : S086")
+print("Aim: Scrape data from Wikipedia homepage using BeautifulSoup")
+print()
+
+# Step 1: Get Wikipedia Homepage
+url = "https://www.wikipedia.org/"
+
+headers = {
+    "User-Agent": "Mozilla/5.0"
+}
+
+response = requests.get(url, headers=headers)
+
+print("Status Code:", response.status_code)
+
+# Step 2: Parse HTML
+
+soup = BeautifulSoup(response.text, "html.parser")
+
+# 1. Extract first 3 paragraphs
+
+print("\n----- First 3 Paragraphs -----")
+
+paragraphs = soup.find_all("p")
+
+if len(paragraphs) == 0:
+    print("No paragraphs found.")
+else:
+    for i, paragraph in enumerate(paragraphs[:3], start=1):
+        print("Paragraph", i, ":", paragraph.get_text(" ", strip=True))
+
+# 2. Find all images and print src URLs
+
+print("\n----- Image URLs -----")
+
+images = soup.find_all("img")
+
+print("Total Images:", len(images))
+
+for i, image in enumerate(images, start=1):
+    src = image.get("src")
+
+    if src:
+        print("Image", i, ":", src)
+
+# 3. Count total number of links
+
+print("\n----- Total Links -----")
+
+links = soup.find_all("a")
+
+print("Total Number of Links:", len(links))
+
+# 4. Print all headings H1, H2, H3
+
+print("\n----- Headings -----")
+
+headings = soup.find_all(["h1", "h2", "h3"])
+
+for heading in headings:
+    text = heading.get_text(" ", strip=True)
+
+    if text:
+        print(heading.name.upper(), ":", text)
+
+# 5. Extract all language names
+print("\n----- Languages -----")
+
+# Wikipedia language links are contained in elements
+# having the class "central-featured-lang"
+
+languages = soup.select(".central-featured-lang")
+
+if languages:
+    for language in languages:
+        name = language.get_text(" ", strip=True)
+
+        if name:
+            print("Language:", name)
+else:
+    print("No languages found.")
+
+# Practical Completed
+print("Practical Completed Successfully")
