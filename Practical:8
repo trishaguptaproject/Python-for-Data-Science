@@ -1,0 +1,22 @@
+#Aim: To create a scatter plot showing the relationship between restaurant bill and tip using Seaborn.
+print("Name:Trisha Gupta")
+print("Roll no:S086")
+
+# Step 1: Import libraries
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Step 2: Load the dataset
+tips = sns.load_dataset("tips")
+
+# Display the first 5 rows
+print(tips.head())
+
+# Step 3: Create a scatter plot
+sns.scatterplot(x="total_bill", y="tip", data=tips)
+
+# Step 4: Add title and display the plot
+plt.title("Restaurant Bill vs Tip")
+plt.xlabel("Total Bill")
+plt.ylabel("Tip")
+plt.show()
