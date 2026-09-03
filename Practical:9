@@ -1,0 +1,254 @@
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+
+# 1. CREATE AND EXPLORE DATASET
+
+df = pd.read_csv("iris.csv")
+
+print("========== 1. DATASET EXPLORATION ==========")
+
+print("\nComplete Dataset:")
+print(df)
+
+print("\nFirst 5 Records:")
+print(df.head())
+
+print("\nLast 5 Records:")
+print(df.tail())
+
+print("\nNumber of Rows and Columns:")
+print(df.shape)
+
+print("\nColumn Names:")
+print(df.columns)
+
+print("\nDataset Information:")
+df.info()
+
+print("\nStatistical Information:")
+print(df.describe())
+
+
+# 2. READ AND EXPLORE CSV DATASET
+
+print("\n========== 2. READ AND EXPLORE CSV ==========")
+
+print("\nFirst 10 Records:")
+print(df.head(10))
+
+print("\nNumber of Records:")
+print(len(df))
+
+print("\nColumn Names:")
+print(df.columns)
+
+print("\nAverage Sepal Length:")
+print(df["sepal_length"].mean())
+
+print("\nAverage Sepal Width:")
+print(df["sepal_width"].mean())
+
+print("\nAverage Petal Length:")
+print(df["petal_length"].mean())
+
+print("\nAverage Petal Width:")
+print(df["petal_width"].mean())
+
+
+# 3. SELECTING AND FILTERING DATA
+
+print("\n========== 3. SELECTING AND FILTERING ==========")
+
+print("\nSepal Length and Sepal Width:")
+print(df[["sepal_length", "sepal_width"]])
+
+print("\nFlowers with Sepal Length greater than 5:")
+print(df[df["sepal_length"] > 5])
+
+print("\nFlowers with Petal Length greater than 4:")
+print(df[df["petal_length"] > 4])
+
+print("\nSetosa Flowers:")
+print(df[df["species"] == "setosa"])
+
+print("\nVersicolor Flowers:")
+print(df[df["species"] == "versicolor"])
+
+print("\nVirginica Flowers:")
+print(df[df["species"] == "virginica"])
+
+print("\nFlowers with Sepal Length > 5 and Petal Length > 4:")
+print(df[(df["sepal_length"] > 5) &
+         (df["petal_length"] > 4)])
+
+
+# 4. SORTING AND RANKING
+
+print("\n========== 4. SORTING AND RANKING ==========")
+
+print("\nSepal Length in Ascending Order:")
+print(df.sort_values("sepal_length"))
+
+print("\nSepal Length in Descending Order:")
+print(df.sort_values("sepal_length", ascending=False))
+
+print("\nPetal Length in Descending Order:")
+print(df.sort_values("petal_length", ascending=False))
+
+print("\nTop 5 Flowers Based on Petal Length:")
+print(df.sort_values("petal_length", ascending=False).head(5))
+
+print("\nBottom 3 Flowers Based on Petal Length:")
+print(df.sort_values("petal_length").head(3))
+
+
+# 5. HANDLING MISSING VALUES
+
+print("\n========== 5. HANDLING MISSING VALUES ==========")
+
+print("\nMissing Values:")
+print(df.isnull())
+
+print("\nCount of Missing Values:")
+print(df.isnull().sum())
+
+print("\nDataset:")
+print(df)
+
+
+# 6. DATA CLEANING AND NEW COLUMN
+
+print("\n========== 6. DATA CLEANING ==========")
+
+
+def flower_size(length):
+    if length < 2:
+        return "Small"
+    elif length < 5:
+        return "Medium"
+    else:
+        return "Large"
+
+
+df["Petal_Size"] = df["petal_length"].apply(flower_size)
+
+print("\nDataset with Petal Size:")
+print(df)
+
+
+# 7. STATISTICAL ANALYSIS
+
+print("\n========== 7. STATISTICAL ANALYSIS ==========")
+
+print("\nAverage Sepal Length:",
+      df["sepal_length"].mean())
+
+print("\nMaximum Sepal Length:",
+      df["sepal_length"].max())
+
+print("\nMinimum Sepal Length:",
+      df["sepal_length"].min())
+
+print("\nMedian Sepal Length:",
+      df["sepal_length"].median())
+
+print("\nStandard Deviation of Sepal Length:",
+      df["sepal_length"].std())
+
+print("\nAverage Petal Length:",
+      df["petal_length"].mean())
+
+print("\nNumber of Flowers:",
+      df["species"].count())
+
+print("\nFlowers with Petal Length above 4:",
+      (df["petal_length"] > 4).sum())
+
+
+# 8. GROUPING AND AGGREGATION
+
+print("\n========== 8. GROUPING AND AGGREGATION ==========")
+
+print("\nNumber of Flowers in Each Species:")
+print(df.groupby("species")["sepal_length"].count())
+
+print("\nAverage Sepal Length by Species:")
+print(df.groupby("species")["sepal_length"].mean())
+
+print("\nMaximum Petal Length by Species:")
+print(df.groupby("species")["petal_length"].max())
+
+print("\nAverage Petal Width by Species:")
+print(df.groupby("species")["petal_width"].mean())
+
+
+# 9. DATA VISUALIZATION
+
+print("\n========== 9. DATA VISUALIZATION ==========")
+
+
+# BAR CHART
+
+species_average = df.groupby("species")["petal_length"].mean()
+
+plt.figure(figsize=(8, 5))
+
+plt.bar(species_average.index,
+        species_average.values)
+
+plt.xlabel("Species")
+plt.ylabel("Average Petal Length")
+plt.title("Average Petal Length by Species")
+
+plt.show()
+
+
+# LINE CHART
+
+plt.figure(figsize=(8, 5))
+
+plt.plot(df.index,
+         df["sepal_length"],
+         label="Sepal Length")
+
+plt.plot(df.index,
+         df["petal_length"],
+         label="Petal Length")
+
+plt.xlabel("Flower Number")
+plt.ylabel("Length")
+plt.title("Sepal Length and Petal Length")
+
+plt.legend()
+
+plt.show()
+
+
+#HISTOGRAM
+plt.figure(figsize=(8, 5))
+
+plt.hist(df["petal_length"],
+         bins=5)
+
+plt.xlabel("Petal Length")
+plt.ylabel("Number of Flowers")
+plt.title("Distribution of Petal Length")
+
+plt.show()
+
+
+# PIE CHART
+
+species_count = df["species"].value_counts()
+
+plt.figure(figsize=(7, 7))
+
+plt.pie(species_count,
+        labels=species_count.index,
+        autopct="%1.1f%%")
+
+plt.title("Flowers by Species")
+
+plt.show()
