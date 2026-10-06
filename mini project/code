@@ -1,0 +1,874 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+import matplotlib.patches as mpatches
+from matplotlib.colors import LinearSegmentedColormap
+import seaborn as sns
+
+
+# 1. GENERAL SETTINGS
+
+plt.rcParams.update({
+    "axes.titlesize": 10,
+    "axes.labelsize": 9,
+    "xtick.labelsize": 8,
+    "ytick.labelsize": 8,
+    "legend.fontsize": 8,
+    "font.family": "DejaVu Sans",                      
+})
+
+
+# Colors
+TEAL = "#1AACA8"
+PINK = "#E8368F"
+DARK = "#1f2937"
+CARD_BG = "#FFFFFF"
+PAGE_BG = "#EEF1F5"
+
+
+# 2. LOAD DATA
+
+df = pd.read_csv("Mall_Customers.csv")
+
+# 3. DISPLAY BASIC DATA ANALYSIS
+print("=" * 40)
+print("       MALL CUSTOMERS DATA ANALYSIS")
+print("=" * 40)
+
+print("\nFirst 5 Records:")
+print(df.head())
+
+print("\nNumber of Rows and Columns:")
+print(df.shape)
+
+print("\nColumn Names:")
+print(df.columns)
+
+print("\nDataset Information:")
+print(df.info())
+
+print("\nStatistical Summary:")
+print(df.describe())
+
+print("\n" + "=" * 40)
+print("              KEY RESULTS")
+print("=" * 40)
+
+print(f"\nAverage Age: {df['Age'].mean():.2f}")
+print(
+    f"Average Annual Income: "
+    f"{df['Annual Income (k$)'].mean():.2f} k$"
+)
+print(
+    f"Average Spending Score: "
+    f"{df['Spending Score (1-100)'].mean():.2f}"
+)
+
+print()
+
+# 4. CREATE FIGURE AND GRID LAYOUT
+
+# Increased height from 13 to 14
+fig = plt.figure(
+    figsize=(22, 14),
+    facecolor=PAGE_BG
+)
+
+# Increased hspace to prevent vertical overlap
+gs = gridspec.GridSpec(
+    4,
+    4,
+    figure=fig,
+
+    # Header, KPI, charts, bottom charts
+    height_ratios=[0.55, 0.55, 2.1, 2.6],
+
+    # More vertical space between rows
+    hspace=0.85,
+
+    # Horizontal space
+    wspace=0.28,
+
+    left=0.03,
+    right=0.985,
+    top=0.97,
+    bottom=0.05
+)
+
+
+# 5. HELPER FUNCTION FOR AXES PIXEL ASPECT
+
+def axes_pixel_aspect(ax):
+    """
+    Return width / height of an axes in pixels.
+    Used to keep icons circular even in wide axes.
+    """
+
+    bbox = ax.get_position()
+
+    fig_w_in, fig_h_in = fig.get_size_inches()
+    dpi = fig.dpi
+
+    w_px = bbox.width * fig_w_in * dpi
+    h_px = bbox.height * fig_h_in * dpi
+
+    return w_px / h_px
+
+
+# 6. DRAW ICON FUNCTION
+
+def draw_icon(
+    ax,
+    kind,
+    cx,
+    cy,
+    r,
+    badge_color,
+    icon_color="white"
+):
+    """
+    Draw a circular badge with a simple vector icon.
+    """
+
+    k = axes_pixel_aspect(ax)
+
+    def X(p):
+        """
+        Convert logical height-based length
+        into x-axis fraction.
+        """
+        return p / k
+
+    def circ(cx_, cy_, r_, color, z):
+        ax.add_patch(
+            mpatches.Ellipse(
+                (cx_, cy_),
+                2 * X(r_),
+                2 * r_,
+                transform=ax.transAxes,
+                facecolor=color,
+                linewidth=0,
+                zorder=z
+            )
+        )
+
+    # Main circular badge
+    circ(
+        cx,
+        cy,
+        r,
+        badge_color,
+        5
+    )
+
+    s = r * 0.9
+
+
+    # PEOPLE ICON
+    
+    if kind == "people":
+
+        circ(
+            cx - X(s * 0.28),
+            cy + s * 0.15,
+            s * 0.28,
+            icon_color,
+            6
+        )
+
+        circ(
+            cx + X(s * 0.28),
+            cy + s * 0.15,
+            s * 0.28,
+            icon_color,
+            6
+        )
+
+        ax.add_patch(
+            mpatches.Ellipse(
+                (
+                    cx - X(s * 0.28),
+                    cy - s * 0.35
+                ),
+                X(s * 0.7) * 2,
+                s * 0.55,
+                transform=ax.transAxes,
+                facecolor=icon_color,
+                linewidth=0,
+                zorder=6
+            )
+        )
+
+        ax.add_patch(
+            mpatches.Ellipse(
+                (
+                    cx + X(s * 0.28),
+                    cy - s * 0.35
+                ),
+                X(s * 0.7) * 2,
+                s * 0.55,
+                transform=ax.transAxes,
+                facecolor=icon_color,
+                linewidth=0,
+                zorder=6
+            )
+        )
+
+
+    # CALENDAR ICON
+    
+    elif kind == "calendar":
+
+        body_w = X(s)
+        body_h = s * 0.9
+
+        ax.add_patch(
+            mpatches.FancyBboxPatch(
+                (
+                    cx - body_w * 0.5,
+                    cy - body_h * 0.5
+                ),
+                body_w,
+                body_h,
+                boxstyle="round,pad=0,rounding_size=0.05",
+                transform=ax.transAxes,
+                facecolor=icon_color,
+                linewidth=0,
+                zorder=6
+            )
+        )
+
+        top_h = s * 0.22
+
+        ax.add_patch(
+            mpatches.Rectangle(
+                (
+                    cx - body_w * 0.5,
+                    cy + body_h * 0.5 - top_h
+                ),
+                body_w,
+                top_h,
+                transform=ax.transAxes,
+                facecolor=badge_color,
+                linewidth=0,
+                zorder=7
+            )
+        )
+
+        ring_h = s * 0.18
+
+        for dx in (-s * 0.25, s * 0.25):
+
+            ax.add_patch(
+                mpatches.Rectangle(
+                    (
+                        cx + X(dx) - X(s * 0.03),
+                        cy + body_h * 0.5 - top_h * 0.5
+                    ),
+                    X(s * 0.06),
+                    ring_h,
+                    transform=ax.transAxes,
+                    facecolor=badge_color,
+                    linewidth=0,
+                    zorder=7
+                )
+            )
+
+
+    # MONEY ICON
+    
+    elif kind == "money":
+
+        bbox = ax.get_position()
+
+        fig_h_in = fig.get_size_inches()[1]
+
+        h_px = bbox.height * fig_h_in * fig.dpi
+
+        ax.text(
+            cx,
+            cy,
+            "$",
+            transform=ax.transAxes,
+            ha="center",
+            va="center",
+            fontsize=r * h_px * 0.9,
+            fontweight="bold",
+            color=icon_color,
+            zorder=6
+        )
+
+
+    # STAR ICON
+    
+    elif kind == "star":
+
+        bbox = ax.get_position()
+
+        fig_h_in = fig.get_size_inches()[1]
+
+        h_px = bbox.height * fig_h_in * fig.dpi
+
+        ax.plot(
+            cx,
+            cy,
+            marker="*",
+            markersize=r * h_px * 0.9,
+            color=icon_color,
+            transform=ax.transAxes,
+            zorder=6
+        )
+
+
+# 7. HEADER BANNER
+
+ax_header = fig.add_subplot(gs[0, :])
+
+ax_header.set_xlim(0, 1)
+ax_header.set_ylim(0, 1)
+ax_header.axis("off")
+
+
+# Gradient
+grad = np.linspace(
+    0,
+    1,
+    256
+).reshape(1, -1)
+
+cmap = LinearSegmentedColormap.from_list(
+    "hdr",
+    [TEAL, PINK]
+)
+
+
+# Rounded header shape
+clip = mpatches.FancyBboxPatch(
+    (0.0, 0.05),
+    1.0,
+    0.9,
+    boxstyle="round,pad=0,rounding_size=0.08",
+    transform=ax_header.transAxes,
+    facecolor="none",
+    edgecolor="none"
+)
+
+ax_header.add_patch(clip)
+
+
+# Gradient image
+im = ax_header.imshow(
+    grad,
+    aspect="auto",
+    cmap=cmap,
+    extent=[0, 1, 0, 1],
+    zorder=0
+)
+
+im.set_clip_path(clip)
+
+
+# Left icon
+draw_icon(
+    ax_header,
+    "money",
+    0.028,
+    0.5,
+    0.32,
+    "white",
+    TEAL
+)
+
+
+# Header title
+ax_header.text(
+    0.075,
+    0.62,
+    "MALL CUSTOMERS DATA ANALYSIS",
+    fontsize=17,
+    fontweight="bold",
+    color="white",
+    va="center",
+    transform=ax_header.transAxes,
+    zorder=8
+)
+
+
+# Header subtitle
+ax_header.text(
+    0.075,
+    0.30,
+    "Customer Insights & Visualization Dashboard",
+    fontsize=10,
+    color="white",
+    va="center",
+    transform=ax_header.transAxes,
+    zorder=8
+)
+
+
+# Right icon
+draw_icon(
+    ax_header,
+    "people",
+    0.965,
+    0.5,
+    0.32,
+    "white",
+    PINK
+)
+
+
+# 8. KPI CARDS
+
+kpi_data = [
+
+    (
+        "Total Customers",
+        f"{len(df)}",
+        "people",
+        PINK
+    ),
+
+    (
+        "Average Age",
+        f"{df['Age'].mean():.2f}",
+        "calendar",
+        TEAL
+    ),
+
+    (
+        "Average Annual Income",
+        f"{df['Annual Income (k$)'].mean():.2f} k$",
+        "money",
+        PINK
+    ),
+
+    (
+        "Average Spending Score",
+        f"{df['Spending Score (1-100)'].mean():.2f}",
+        "star",
+        TEAL
+    )
+]
+
+
+for i, (
+    label,
+    value,
+    icon,
+    color
+) in enumerate(kpi_data):
+
+    ax = fig.add_subplot(gs[1, i])
+
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
+
+
+    # KPI card background
+    ax.add_patch(
+        mpatches.FancyBboxPatch(
+            (0.02, 0.08),
+            0.96,
+            0.84,
+            boxstyle="round,pad=0,rounding_size=0.12",
+            transform=ax.transAxes,
+            facecolor=CARD_BG,
+            edgecolor="#dfe3e8",
+            linewidth=1
+        )
+    )
+
+
+    # Icon
+    draw_icon(
+        ax,
+        icon,
+        0.15,
+        0.5,
+        0.28,
+        color
+    )
+
+
+    # KPI label
+    ax.text(
+        0.32,
+        0.66,
+        label,
+        fontsize=9.5,
+        color="#555",
+        va="center",
+        transform=ax.transAxes,
+        zorder=8
+    )
+
+
+    # KPI value
+    ax.text(
+        0.32,
+        0.30,
+        value,
+        fontsize=16,
+        fontweight="bold",
+        color=DARK,
+        va="center",
+        transform=ax.transAxes,
+        zorder=8
+    )
+
+
+# 9. CHART CARD STYLE
+
+def style_card(ax, title, accent):
+
+    ax.set_facecolor(CARD_BG)
+
+    # Remove borders
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+
+    # Remove tick marks
+    ax.tick_params(length=0)
+
+    # Remove default title
+    ax.set_title("")
+
+
+    # Colored bullet
+    # Moved slightly lower from 1.12 to 1.08
+    
+    ax.text(
+        0.0,
+        1.08,
+        "\u25CF",
+        transform=ax.transAxes,
+        fontsize=10,
+        color=accent,
+        va="center",
+        ha="left"
+    )
+
+
+    # Chart title
+    # Smaller font and lower position
+    
+    ax.text(
+        0.035,
+        1.08,
+        title,
+        transform=ax.transAxes,
+        fontsize=9.5,
+        fontweight="bold",
+        color=DARK,
+        va="center",
+        ha="left"
+    )
+
+
+# 10. CARD BACKGROUND
+
+def card_backdrop(ax, pad=0.035):
+
+    bbox = ax.get_position()
+
+    rect = mpatches.FancyBboxPatch(
+
+        (
+            bbox.x0 - pad * 0.4,
+            bbox.y0 - pad
+        ),
+
+        bbox.width + pad * 0.8,
+
+        bbox.height + pad * 1.9,
+
+        boxstyle="round,pad=0,rounding_size=0.015",
+
+        transform=fig.transFigure,
+
+        facecolor=CARD_BG,
+
+        edgecolor="#dfe3e8",
+
+        linewidth=1,
+
+        zorder=0
+    )
+
+    fig.patches.append(rect)
+
+
+# 11. ROW 2 - HISTOGRAMS
+
+# Chart 1: Number of Customers by Gender
+
+ax1 = fig.add_subplot(gs[2, 0])
+
+counts = df["Gender"].value_counts()
+
+ax1.bar(
+    counts.index,
+    counts.values,
+    color=[TEAL, PINK],
+    width=0.55
+)
+
+
+# Values above bars
+for i, v in enumerate(counts.values):
+
+    ax1.text(
+        i,
+        v + 2,
+        str(v),
+        ha="center",
+        fontweight="bold",
+        fontsize=8
+    )
+
+
+ax1.set_ylabel("Number of Customers")
+
+style_card(
+    ax1,
+    "Number of Customers by Gender",
+    TEAL
+)
+
+
+# Chart 2: Age Distribution
+
+ax2 = fig.add_subplot(gs[2, 1])
+
+ax2.hist(
+    df["Age"],
+    bins=10,
+    color=TEAL,
+    edgecolor="white"
+)
+
+ax2.set_xlabel("Age")
+ax2.set_ylabel("Number of Customers")
+
+style_card(
+    ax2,
+    "Age Distribution",
+    TEAL
+)
+
+
+# Chart 3: Annual Income Distribution
+
+ax3 = fig.add_subplot(gs[2, 2])
+
+ax3.hist(
+    df["Annual Income (k$)"],
+    bins=10,
+    color=PINK,
+    edgecolor="white"
+)
+
+ax3.set_xlabel("Annual Income (k$)")
+ax3.set_ylabel("Number of Customers")
+
+style_card(
+    ax3,
+    "Annual Income Distribution",
+    PINK
+)
+
+
+# Chart 4: Spending Score Distribution
+
+ax4 = fig.add_subplot(gs[2, 3])
+
+ax4.hist(
+    df["Spending Score (1-100)"],
+    bins=10,
+    color=TEAL,
+    edgecolor="white"
+)
+
+ax4.set_xlabel("Spending Score")
+ax4.set_ylabel("Number of Customers")
+
+style_card(
+    ax4,
+    "Spending Score Distribution",
+    TEAL
+)
+
+
+# 12. ROW 3 - PIE, SCATTER AND BOXPLOT
+# Chart 5: Gender Distribution
+
+ax5 = fig.add_subplot(gs[3, 0])
+
+gender_counts = df["Gender"].value_counts()
+
+ax5.pie(
+    gender_counts.values,
+    labels=gender_counts.index,
+    autopct="%1.1f%%",
+    startangle=90,
+    colors=[TEAL, PINK],
+    wedgeprops={
+        "edgecolor": "white",
+        "linewidth": 1.5
+    }
+)
+
+style_card(
+    ax5,
+    "Gender Distribution",
+    PINK
+)
+
+
+# Chart 6: Annual Income vs Spending Score
+
+ax6 = fig.add_subplot(gs[3, 1])
+
+ax6.scatter(
+    df["Annual Income (k$)"],
+    df["Spending Score (1-100)"],
+    color=TEAL,
+    alpha=0.6,
+    s=25
+)
+
+ax6.set_xlabel("Annual Income (k$)")
+ax6.set_ylabel("Spending Score")
+
+style_card(
+    ax6,
+    "Annual Income vs Spending Score",
+    TEAL
+)
+
+
+# Chart 7: Spending Score by Gender
+
+ax7 = fig.add_subplot(gs[3, 2])
+
+sns.boxplot(
+    data=df,
+    x="Gender",
+    y="Spending Score (1-100)",
+    hue="Gender",
+    palette={
+        "Female": PINK,
+        "Male": TEAL
+    },
+    legend=False,
+    ax=ax7
+)
+
+ax7.set_xlabel("Gender")
+ax7.set_ylabel("Spending Score")
+
+style_card(
+    ax7,
+    "Spending Score by Gender",
+    PINK
+)
+
+
+# Chart 8: Age vs Spending Score
+
+ax8 = fig.add_subplot(gs[3, 3])
+
+ax8.scatter(
+    df["Age"],
+    df["Spending Score (1-100)"],
+    color=PINK,
+    alpha=0.6,
+    s=25
+)
+
+ax8.set_xlabel("Age")
+ax8.set_ylabel("Spending Score")
+
+style_card(
+    ax8,
+    "Age vs Spending Score",
+    TEAL
+)
+
+
+# 13. DRAW CARD BACKGROUNDS
+
+# First draw the canvas so final positions are calculated
+fig.canvas.draw()
+
+
+# Add white card backgrounds
+for ax in [
+    ax1,
+    ax2,
+    ax3,
+    ax4,
+    ax5,
+    ax6,
+    ax7,
+    ax8
+]:
+
+    card_backdrop(ax)
+
+
+# Bring charts to the front
+for ax in [
+    ax1,
+    ax2,
+    ax3,
+    ax4,
+    ax5,
+    ax6,
+    ax7,
+    ax8
+]:
+
+    ax.set_zorder(3)
+
+# 14. SAVE DASHBOARD
+
+plt.savefig(
+    "customer_dashboard.png",
+    dpi=150,
+    facecolor=fig.get_facecolor(),
+    bbox_inches="tight"
+)
+
+
+# 15. MAXIMIZE WINDOW
+try:
+
+    mng = plt.get_current_fig_manager()
+
+    mng.window.state("zoomed")
+
+except Exception:
+
+    try:
+
+        mng.window.showMaximized()
+
+    except Exception:
+
+        try:
+
+            mng.full_screen_toggle()
+
+        except Exception:
+
+            pass
+
+
+# 16. DISPLAY DASHBOARD
+
+plt.show()
